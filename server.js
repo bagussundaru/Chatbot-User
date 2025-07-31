@@ -8,7 +8,7 @@ const app = express();
 const PORT = 3030;
 
 // OpenRouter API Configuration
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || 'your-openrouter-api-key-here';
+const OPENROUTER_API_KEY = 'sk-or-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Ganti dengan API key asli
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
 
 // PLN AP2T Knowledge Base Context
@@ -50,23 +50,37 @@ app.use(express.static(path.join(__dirname)));
 // Function to call OpenRouter API
 async function callOpenRouterAPI(message, sessionId) {
     try {
+        // Add variety to system context based on message content
+        const lowerMessage = message.toLowerCase();
+        let contextVariation = PLN_CONTEXT;
+        
+        if (lowerMessage.includes('meter')) {
+            contextVariation += "\n\nFocus on meter-related expertise and share specific troubleshooting experiences.";
+        } else if (lowerMessage.includes('safety') || lowerMessage.includes('loto')) {
+            contextVariation += "\n\nEmphasize safety protocols and share real safety incidents you've handled.";
+        } else if (lowerMessage.includes('maintenance')) {
+            contextVariation += "\n\nShare maintenance best practices and preventive measures from your experience.";
+        } else if (lowerMessage.includes('gangguan') || lowerMessage.includes('troubleshooting')) {
+            contextVariation += "\n\nProvide step-by-step troubleshooting and share emergency response stories.";
+        }
+        
         const response = await axios.post(`${OPENROUTER_BASE_URL}/chat/completions`, {
             model: "mistralai/mistral-7b-instruct:free", // Working model with enhanced human-like personality
             messages: [
                 {
                     role: "system",
-                    content: PLN_CONTEXT
+                    content: contextVariation
                 },
                 {
                     role: "user",
                     content: message
                 }
             ],
-            max_tokens: 800,
-            temperature: 0.8,
-            top_p: 0.9,
-            frequency_penalty: 0.1,
-            presence_penalty: 0.1
+            max_tokens: 1000,
+            temperature: 0.9, // Increased for more creativity
+            top_p: 0.95, // Increased for more diverse responses
+            frequency_penalty: 0.3, // Increased to reduce repetition
+            presence_penalty: 0.4 // Increased to encourage new topics
         }, {
             headers: {
                 'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
@@ -132,7 +146,7 @@ function getFallbackResponse(message) {
     const quickReplies = [];
     
     if (lowerMessage.includes('meter')) {
-        quickReplies.push('🔍 Cek error code meter', '⚙️ Reset prosedur meter', '📋 Maintenance schedule meter');
+        quickReplies.push('🔍 Cek kode error meter', '⚙️ Prosedur reset meter', '📋 Jadwal maintenance meter');
     }
     if (lowerMessage.includes('maintenance') || lowerMessage.includes('pemeliharaan')) {
         quickReplies.push('🔧 Maintenance trafo 20kV', '📅 Jadwal rutin maintenance', '🛠️ Checklist harian maintenance');
@@ -141,31 +155,29 @@ function getFallbackResponse(message) {
         quickReplies.push('⚡ Prosedur LOTO 5 langkah', '🦺 APD wajib gardu', '🚨 Kontak darurat PLN');
     }
     if (lowerMessage.includes('gangguan') || lowerMessage.includes('troubleshooting')) {
-        quickReplies.push('🚨 Penanganan gangguan darurat', '🔍 Root cause analysis', '📞 Emergency response team');
+        quickReplies.push('🚨 Penanganan gangguan darurat', '🔍 Analisis akar penyebab', '📞 Tim respons darurat');
     }
     if (lowerMessage.includes('trafo')) {
-        quickReplies.push('⚡ Load calculation trafo', '🌡️ Temperature check trafo', '🔧 Protection relay setting');
+        quickReplies.push('⚡ Perhitungan beban trafo', '🌡️ Pemeriksaan suhu trafo', '🔧 Pengaturan relay proteksi');
     }
     
     // Expert human-like fallback responses
     const expertFallbacks = [
         {
-            content: `Hai rekan baru! Saya Mas Broto dari tim AP2T. Wah, error E01 di meter kWh ya? Ini sering banget saya temuin selama 15 tahun di lapangan!\n\nError E01 itu biasanya masalah komunikasi RS485 atau modul komunikasi yang rusak. Dulu waktu di Bekasi 2022, pernah ada 15 unit meter Hexing error E01 semua karena kabel RS485 putus.\n\nCoba step by step ini gan:\n1. Cek kabel RS485 A-B (biasanya warna oranye-putih dan oranye)\n2. Pastikan termination resistor 120 ohm terpasang\n3. Reset meter dengan power cycle 30 detik\n4. Cek dengan multimeter: tegangan A-B harus 2-5VDC\n5. Kalau masih error, kemungkinan modul komunikasi perlu diganti\n\nJangan lupa pakai APD lengkap ya! Safety first!`,
-            quickReplies: ['🔍 Cek kabel RS485', '⚡ Reset meter', '📏 Tegangan check', '🛠️ Modul komunikasi']
+            content: `Hai rekan! Saya Mas Broto dari tim AP2T. Wah, error E01 di meter kWh ya? Ini sering banget saya temui selama 15 tahun di lapangan!\n\nError E01 itu biasanya masalah komunikasi RS485 atau modul komunikasi yang rusak. Dulu waktu di Bekasi 2022, pernah ada 15 unit meter Hexing error E01 semua karena kabel RS485 putus.\n\nCoba langkah demi langkah ini ya:\n1. Cek kabel RS485 A-B (biasanya warna oranye-putih dan oranye)\n2. Pastikan resistor terminasi 120 ohm terpasang\n3. Reset meter dengan power cycle 30 detik\n4. Cek dengan multimeter: tegangan A-B harus 2-5VDC\n5. Kalau masih error, kemungkinan modul komunikasi perlu diganti\n\nJangan lupa pakai APD lengkap ya! Keselamatan pertama!`,
+            quickReplies: ['🔍 Cek kabel RS485', '⚡ Reset meter', '📏 Cek tegangan', '🛠️ Modul komunikasi']
         },
         {
-            content: `Wah, ada yang kurang jelas ya? Santai aja, itu wajar banget! Dulu waktu saya masih junior di tahun 2010, juga sering bingung kok.\n\nBiar aku bantu, coba ceritain:\n1. Lokasi kerja kamu dimana? (contoh: GI Bekasi, Gardu A)
-2. Peralatan yang dipakai apa? (meter merk apa, trafo berapa kVA)
-3. Sudah pernah training atau belum?\n\nDari situ, aku bisa kasih guidance yang pas buat situasi kamu. Sharing is caring kan? Pernah ada junior di Bekasi yang sama-sama belajar, sekarang udah jadi team leader lho!`,
-            quickReplies: ['📍 Lokasi kerja', '⚙️ Equipment detail', '🎓 Training status', '💡 Pro tips']
+            content: `Wah, ada yang kurang jelas ya? Santai aja, itu wajar banget! Dulu waktu saya masih junior di tahun 2010, juga sering bingung kok.\n\nBiar aku bantu, coba ceritain:\n1. Lokasi kerja kamu dimana? (contoh: GI Bekasi, Gardu A)\n2. Peralatan yang dipakai apa? (meter merk apa, trafo berapa kVA)\n3. Sudah pernah training atau belum?\n\nDari situ, aku bisa kasih panduan yang pas buat situasi kamu. Berbagi itu peduli kan? Pernah ada junior di Bekasi yang sama-sama belajar, sekarang udah jadi pemimpin tim lho!`,
+            quickReplies: ['📍 Lokasi kerja', '⚙️ Detail peralatan', '🎓 Status training', '💡 Tips pro']
         },
         {
-            content: `Halo rekan! Mas Broto disini. Wah, pertanyaan bagus banget! Sebagai engineer yang udah 15 tahun di lapangan, aku punya banyak cerita nih.\n\nCoba jelasin konteksnya - apakah ini untuk persiapan kerja lapangan, atau kamu lagi menghadapi masalah spesifik? Jangan takut untuk bertanya, dulu aku juga banyak bertanya ke senior sampai akhirnya jadi expert di bidangnya.\n\nAku bisa bantu dengan: safety procedures, troubleshooting meter, maintenance trafo, atau SOP darurat. Yang mana dulu? Cerita aja detailnya!`,
-            quickReplies: ['🦺 Safety procedures', '🔧 Troubleshooting', '⚡ Maintenance', '📋 SOP darurat']
+            content: `Halo rekan! Mas Broto di sini. Wah, pertanyaan bagus banget! Sebagai engineer yang udah 15 tahun di lapangan, aku punya banyak cerita nih.\n\nCoba jelasin konteksnya - apakah ini untuk persiapan kerja lapangan, atau kamu lagi menghadapi masalah spesifik? Jangan takut untuk bertanya, dulu aku juga banyak bertanya ke senior sampai akhirnya jadi ahli di bidangnya.\n\nAku bisa bantu dengan: prosedur keselamatan, troubleshooting meter, maintenance trafo, atau SOP darurat. Yang mana dulu? Cerita aja detailnya!`,
+            quickReplies: ['🦺 Prosedur keselamatan', '🔧 Troubleshooting', '⚡ Maintenance', '📋 SOP darurat']
         },
         {
-            content: `Eits, ada yang butuh bantuan nih! Saya Mas Broto, senior engineer PLN AP2T. Dari pengalaman 15 tahun di lapangan, setiap masalah pasti ada solusinya.\n\nKadang memang perlu diskusi detail dulu biar solusinya tepat sasaran. Apa yang sedang kamu hadapi?\n\nContoh sharing: waktu itu ada junior di Tangerang bingung dengan prosedur LOTO di gardu 20kV, setelah kita diskusi ternyata cuma masalah sequence yang salah. Jadi, ceritain aja detail masalahnya!`,
-            quickReplies: ['⚡ Problema LOTO', '🔍 Sequence prosedur', '💡 Solusi cepat', '📞 Diskusi detail']
+            content: `Eits, ada yang butuh bantuan nih! Saya Mas Broto, senior engineer PLN AP2T. Dari pengalaman 15 tahun di lapangan, setiap masalah pasti ada solusinya.\n\nKadang memang perlu diskusi detail dulu biar solusinya tepat sasaran. Apa yang sedang kamu hadapi?\n\nContoh berbagi: waktu itu ada junior di Tangerang bingung dengan prosedur LOTO di gardu 20kV, setelah kita diskusi ternyata cuma masalah urutan yang salah. Jadi, ceritain aja detail masalahnya!`,
+            quickReplies: ['⚡ Masalah LOTO', '🔍 Urutan prosedur', '💡 Solusi cepat', '📞 Diskusi detail']
         }
     ];
     
