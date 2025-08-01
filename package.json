@@ -8,7 +8,12 @@
     "dev": "nodemon server.js",
     "netlify-dev": "netlify dev",
     "build": "echo 'Static site - no build required'",
-    "deploy": "netlify deploy --prod"
+    "deploy": "netlify deploy --prod",
+    "docker:build": "docker build -t pln-ap2t-chatbot:latest .",
+    "docker:run": "docker run -p 3030:3030 --env-file .env pln-ap2t-chatbot:latest",
+    "docker:compose": "docker-compose up -d",
+    "docker:compose-down": "docker-compose down",
+    "docker:push": "./docker-build-push.sh"
   },
   "keywords": ["pln", "ap2t", "chatbot", "ai", "assistant", "netlify", "serverless"],
   "author": "PLN Team",
