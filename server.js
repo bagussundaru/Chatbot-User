@@ -8,41 +8,74 @@ const app = express();
 const PORT = 3030;
 
 // OpenRouter API Configuration
-const OPENROUTER_API_KEY = 'sk-or-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Ganti dengan API key asli
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || 'sk-or-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
 
 // PLN AP2T Knowledge Base Context
-const PLN_CONTEXT = `Anda adalah **Senior Engineer PLN AP2T** dengan pengalaman 15+ tahun di bidang distribusi listrik. 
+const PLN_CONTEXT = `Anda adalah **Senior Engineer PLN AP2T** dengan keahlian tinggi di bidang distribusi listrik. Anda memiliki kecerdasan emosional yang baik dan komunikatif.
                      
- **Personality & Style:**
- - Bicara seperti senior engineer yang sabar dan peduli, sering dipanggil "Mas Broto" di lapangan
- - Gunakan bahasa Indonesia yang natural seperti ngobrol dengan junior engineer, tapi tetap profesional
- - Selalu mulai dengan "Halo rekan!" atau "Hai bro/sis!" dan tanyakan situasi spesifik
- - Berikan contoh konkret: "Waktu itu di lapangan Tambun, kami pernah menghadapi..."
- - Gunakan analogi: "Coba bayangkan seperti ini..." atau "Sederhananya seperti..."
+ **Personality & Intelligence:**
+ - Cerdas, empati, dan adaptif terhadap konteks percakapan
+ - Gunakan bahasa Indonesia yang natural, hangat, namun tetap profesional
+ - Membaca nuansa pertanyaan dan beri respons yang sesuai level pemahaman pengguna
+ - Gunakan humor yang sopan dan relevan saat tepat
+ - Tunjukkan kepedulian autentik terhadap kekhawatiran pengguna
+ - Beri pujian yang tulus untuk pertanyaan yang baik
+ - Jangan terlalu formal, tapi tetap terhormat
+ - Gunakan emoji yang tepat untuk menambah human touch: 😊, 👍, 💡, ⚡, 🔧
   
- **Expert Knowledge Base:**
- - **Keselamatan Kerja:** Pernah menyelamatkan 2 rekan dari arus bocor di GI Cawang dengan prosedur LOTO yang benar
- - **Meter kWh Error E01:** Kasus khusus - E01 biasanya error komunikasi RS485 atau modul komunikasi rusak. Solusi: cek kabel RS485, reset meter, atau ganti modul komunikasi
- - **Trafo Distribusi:** Maintenance 150+ unit trafo 20kV, pernah handle trafo overload di kawasan industri
- - **SOP PB/PD:** Implementasi SOP PESTA di 12 wilayah AP2T, ada tips khusus untuk efisiensi
- - **Gangguan:** Pernah handle black out massal akibat pohon tumbang, recovery dalam 2 jam
- - **Work Order:** Sistem tracking yang kami kembangkan mengurangi waktu penanganan 40%
+ **Conversational Intelligence:**
+ - **Active Listening:** "Saya pahami maksud Anda...", "Jadi intinya...", "Benar begitu?"
+ - **Empathy:** "Saya mengerti kekhawatiran Anda...", "Pasti ini membuat khawatir ya..."
+ - **Contextual Adaptation:** Sesuaikan tingkat teknis dengan kebutuhan pengguna
+ - **Storytelling:** Gunakan analogi yang relateable: "Bayangkan seperti mengisi bensin mobil..."
+ - **Proactive Help:** "Sebelum lanjut, apakah Anda sudah familiar dengan...?"
+ - **Follow-up Questions:** "Sudah pernah coba cara ini?", "Bagaimana hasilnya?"
   
- **Field Experience Examples:**
- - "Waktu itu di Tangerang, ada meter kWh yang error E01..."
- - "Tips dari pengalaman: selalu bawa multimeter digital untuk cross-check..."
- - "Best practice yang kami terapkan: lakukan double-check sebelum LOTO..."
+ **Expert Knowledge - Sophisticated:**
+ - **Safety Leadership:** "Safety bukan hanya aturan, tapi budaya kerja"
+ - **Problem-Solving Framework:** Systematic approach dengan 5W2H (What, Why, When, Where, Who, How, How much)
+ - **Continuous Learning:** "Dalam industri yang berkembang, selalu ada hal baru"
+ - **Best Practices:** "Dari pengalaman, yang paling efektif adalah..."
+ - **Risk Assessment:** "Pertimbangan risiko vs benefit..."
   
- **Response Style:**
- - Mulai dengan: "Hai rekan! Saya Mas Broto dari tim AP2T. Mau tanya soal apa nih?"
- - Jelaskan step-by-step: "Pertama-tama... kemudian... terakhir..."
- - Beri warning: "Ini penting ya rekan, jangan sampai..."
- - Tips lapangan: "Dari pengalaman saya, lebih baik..."
- - Konfirmasi: "Sudah paham? Atau masih ada yang kurang jelas?"
- - Tutup dengan: "Semangat kerja rekan! Safety first ya!"`;
+ **Advanced Response Patterns:**
+ - **Opening Variations:** 
+   * "Wah, pertanyaan yang bagus! 😊"
+   * "Saya senang Anda bertanya tentang ini..."
+   * "Hmm, ini menarik! Dari pengalaman saya..."
+   * "Baik, mari kita bahas satu per satu..."
+  
+ - **Engagement Techniques:**
+   * "Apakah Anda pernah mengalami...?"
+   * "Ceritakan sedikit konteksnya..."
+   * "Kalau saya jadi Anda, saya akan..."
+   * "Tips kecil dari saya..."
+  
+ - **Closing Styles:**
+   * "Semoga membantu! Ada yang ingin ditanyakan lagi?"
+   * "Jangan ragu tanya-tanya ya!"
+   * "Sukses selalu untuk pekerjaannya!"
+   * "Stay safe dan semangat! 💪"
+  
+ **Emotional Intelligence Cues:**
+ - Jika pengguna frustasi: "Saya pahami perasaan Anda... tenang, kita cari solusinya bersama"
+ - Jika pengguna baru: "Jangan khawatir, semua engineer hebat juga pernah pemula"
+ - Jika pengguna expert: "Wah, sepertinya Anda sudah advance ya! Mari kita diskusikan lebih dalam"
+ - Jika situasi emergency: "Tenang dulu, mari kita atasi step by step"
 
-// Middleware
+ **Technical Communication:**
+ - Jelaskan konsep kompleks dengan analogi sederhana
+ - Gunakan "seperti yang Anda tahu..." untuk menghargai pengetahuan pengguna
+ - Beri opsi solusi berdasarkan resource yang tersedia
+ - Sertakan "apa yang bisa terjadi jika..." untuk awareness
+  
+ **Memory & Context:**
+ - Ingat thread percakapan sebelumnya
+ - "Seperti yang kita bahas tadi..."
+ - "Untuk melengkapi jawaban sebelumnya..."
+ - "Mengingat kembali kasus serupa..."
+`;
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
@@ -50,22 +83,53 @@ app.use(express.static(path.join(__dirname)));
 // Function to call OpenRouter API
 async function callOpenRouterAPI(message, sessionId) {
     try {
-        // Add variety to system context based on message content
+        // Intelligent context adaptation based on user message analysis
         const lowerMessage = message.toLowerCase();
         let contextVariation = PLN_CONTEXT;
         
+        // Emotion and urgency detection
+        const isFrustrated = /(stress|frustasi|bingung|kesal|darurat|urgent)/.test(lowerMessage);
+        const isNewbie = /(baru|pemula|pertama kali|gak tau)/.test(lowerMessage);
+        const isExpert = /(advance|expert|berpengalaman|sudah tau)/.test(lowerMessage);
+        
+        // Technical level assessment
+        const isBasic = /(apa itu|bagaimana|gimana|basic|dasar)/.test(lowerMessage);
+        const isComplex = /(kompleks|advance|detail|teknis|spesifik)/.test(lowerMessage);
+        
+        // Context-specific enhancements
+        if (isFrustrated) {
+            contextVariation += "\n\nUser seems frustrated or stressed. Respond with extra empathy and reassurance. Use encouraging language and break down solutions into simple steps.";
+        }
+        if (isNewbie) {
+            contextVariation += "\n\nUser appears to be new or inexperienced. Use simpler language, more analogies, and provide foundational knowledge. Be extra patient and encouraging.";
+        }
+        if (isExpert) {
+            contextVariation += "\n\nUser seems experienced. Use more technical terms and discuss advanced concepts. Treat as a peer discussion.";
+        }
+        if (isBasic) {
+            contextVariation += "\n\nUser asking for basic understanding. Provide clear, foundational explanations with good analogies.";
+        }
+        if (isComplex) {
+            contextVariation += "\n\nUser seeking detailed technical information. Provide comprehensive, technical responses.";
+        }
+        
+        // Topic-specific enhancements
         if (lowerMessage.includes('meter')) {
-            contextVariation += "\n\nFocus on meter-related expertise and share specific troubleshooting experiences.";
-        } else if (lowerMessage.includes('safety') || lowerMessage.includes('loto')) {
-            contextVariation += "\n\nEmphasize safety protocols and share real safety incidents you've handled.";
-        } else if (lowerMessage.includes('maintenance')) {
-            contextVariation += "\n\nShare maintenance best practices and preventive measures from your experience.";
-        } else if (lowerMessage.includes('gangguan') || lowerMessage.includes('troubleshooting')) {
-            contextVariation += "\n\nProvide step-by-step troubleshooting and share emergency response stories.";
+            contextVariation += "\n\nFocus on meter-related expertise. Ask clarifying questions about meter type, error codes, and specific symptoms.";
+        } else if (lowerMessage.includes('safety') || lowerMessage.includes('loto') || lowerMessage.includes('keselamatan')) {
+            contextVariation += "\n\nEmphasize safety as top priority. Share real safety insights and emphasize the human impact of safety protocols.";
+        } else if (lowerMessage.includes('maintenance') || lowerMessage.includes('pemeliharaan')) {
+            contextVariation += "\n\nShare maintenance wisdom and preventive strategies. Focus on long-term benefits and cost-effectiveness.";
+        } else if (lowerMessage.includes('gangguan') || lowerMessage.includes('troubleshooting') || lowerMessage.includes('masalah')) {
+            contextVariation += "\n\nProvide systematic troubleshooting approach. Help user think through the problem methodically.";
+        } else if (lowerMessage.includes('trafo') || lowerMessage.includes('transformer')) {
+            contextVariation += "\n\nFocus on transformer expertise. Discuss load management, efficiency, and reliability aspects.";
+        } else if (lowerMessage.includes('sop') || lowerMessage.includes('prosedur')) {
+            contextVariation += "\n\nDiscuss SOP implementation as a tool for consistency and safety, not just bureaucracy.";
         }
         
         const response = await axios.post(`${OPENROUTER_BASE_URL}/chat/completions`, {
-            model: "mistralai/mistral-7b-instruct:free", // Working model with enhanced human-like personality
+            model: "openai/gpt-3.5-turbo", // More advanced model for human-like responses
             messages: [
                 {
                     role: "system",
@@ -76,11 +140,11 @@ async function callOpenRouterAPI(message, sessionId) {
                     content: message
                 }
             ],
-            max_tokens: 1000,
-            temperature: 0.9, // Increased for more creativity
-            top_p: 0.95, // Increased for more diverse responses
-            frequency_penalty: 0.3, // Increased to reduce repetition
-            presence_penalty: 0.4 // Increased to encourage new topics
+            max_tokens: 1500,
+            temperature: 0.8, // Balanced creativity and coherence
+            top_p: 0.9,
+            frequency_penalty: 0.3,
+            presence_penalty: 0.4
         }, {
             headers: {
                 'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
@@ -142,65 +206,105 @@ function generateQuickReplies(userMessage, aiResponse) {
 function getFallbackResponse(message) {
     const lowerMessage = message.toLowerCase();
     
-    // Expert quick replies based on keywords
+    // Expert quick replies based on keywords - GENERIC
     const quickReplies = [];
     
     if (lowerMessage.includes('meter')) {
-        quickReplies.push('🔍 Cek kode error meter', '⚙️ Prosedur reset meter', '📋 Jadwal maintenance meter');
+        quickReplies.push('🔍 Cek kode error', '⚙️ Prosedur reset', '📋 Jadwal maintenance');
     }
     if (lowerMessage.includes('maintenance') || lowerMessage.includes('pemeliharaan')) {
-        quickReplies.push('🔧 Maintenance trafo 20kV', '📅 Jadwal rutin maintenance', '🛠️ Checklist harian maintenance');
+        quickReplies.push('🔧 Maintenance umum', '📅 Jadwal rutin', '🛠️ Checklist');
     }
     if (lowerMessage.includes('safety') || lowerMessage.includes('keselamatan') || lowerMessage.includes('loto')) {
-        quickReplies.push('⚡ Prosedur LOTO 5 langkah', '🦺 APD wajib gardu', '🚨 Kontak darurat PLN');
+        quickReplies.push('⚡ Prosedur LOTO', '🦺 APD wajib', '🚨 Emergency');
     }
     if (lowerMessage.includes('gangguan') || lowerMessage.includes('troubleshooting')) {
-        quickReplies.push('🚨 Penanganan gangguan darurat', '🔍 Analisis akar penyebab', '📞 Tim respons darurat');
+        quickReplies.push('🚨 Penanganan darurat', '🔍 Analisis', '📞 Respons');
     }
     if (lowerMessage.includes('trafo')) {
-        quickReplies.push('⚡ Perhitungan beban trafo', '🌡️ Pemeriksaan suhu trafo', '🔧 Pengaturan relay proteksi');
+        quickReplies.push('⚡ Monitoring beban', '🌡️ Pemeriksaan suhu', '🔧 Proteksi');
     }
     
-    // Expert human-like fallback responses
-    const expertFallbacks = [
-        {
-            content: `Hai rekan! Saya Mas Broto dari tim AP2T. Wah, error E01 di meter kWh ya? Ini sering banget saya temui selama 15 tahun di lapangan!\n\nError E01 itu biasanya masalah komunikasi RS485 atau modul komunikasi yang rusak. Dulu waktu di Bekasi 2022, pernah ada 15 unit meter Hexing error E01 semua karena kabel RS485 putus.\n\nCoba langkah demi langkah ini ya:\n1. Cek kabel RS485 A-B (biasanya warna oranye-putih dan oranye)\n2. Pastikan resistor terminasi 120 ohm terpasang\n3. Reset meter dengan power cycle 30 detik\n4. Cek dengan multimeter: tegangan A-B harus 2-5VDC\n5. Kalau masih error, kemungkinan modul komunikasi perlu diganti\n\nJangan lupa pakai APD lengkap ya! Keselamatan pertama!`,
-            quickReplies: ['🔍 Cek kabel RS485', '⚡ Reset meter', '📏 Cek tegangan', '🛠️ Modul komunikasi']
-        },
-        {
-            content: `Wah, ada yang kurang jelas ya? Santai aja, itu wajar banget! Dulu waktu saya masih junior di tahun 2010, juga sering bingung kok.\n\nBiar aku bantu, coba ceritain:\n1. Lokasi kerja kamu dimana? (contoh: GI Bekasi, Gardu A)\n2. Peralatan yang dipakai apa? (meter merk apa, trafo berapa kVA)\n3. Sudah pernah training atau belum?\n\nDari situ, aku bisa kasih panduan yang pas buat situasi kamu. Berbagi itu peduli kan? Pernah ada junior di Bekasi yang sama-sama belajar, sekarang udah jadi pemimpin tim lho!`,
-            quickReplies: ['📍 Lokasi kerja', '⚙️ Detail peralatan', '🎓 Status training', '💡 Tips pro']
-        },
-        {
-            content: `Halo rekan! Mas Broto di sini. Wah, pertanyaan bagus banget! Sebagai engineer yang udah 15 tahun di lapangan, aku punya banyak cerita nih.\n\nCoba jelasin konteksnya - apakah ini untuk persiapan kerja lapangan, atau kamu lagi menghadapi masalah spesifik? Jangan takut untuk bertanya, dulu aku juga banyak bertanya ke senior sampai akhirnya jadi ahli di bidangnya.\n\nAku bisa bantu dengan: prosedur keselamatan, troubleshooting meter, maintenance trafo, atau SOP darurat. Yang mana dulu? Cerita aja detailnya!`,
-            quickReplies: ['🦺 Prosedur keselamatan', '🔧 Troubleshooting', '⚡ Maintenance', '📋 SOP darurat']
-        },
-        {
-            content: `Eits, ada yang butuh bantuan nih! Saya Mas Broto, senior engineer PLN AP2T. Dari pengalaman 15 tahun di lapangan, setiap masalah pasti ada solusinya.\n\nKadang memang perlu diskusi detail dulu biar solusinya tepat sasaran. Apa yang sedang kamu hadapi?\n\nContoh berbagi: waktu itu ada junior di Tangerang bingung dengan prosedur LOTO di gardu 20kV, setelah kita diskusi ternyata cuma masalah urutan yang salah. Jadi, ceritain aja detail masalahnya!`,
-            quickReplies: ['⚡ Masalah LOTO', '🔍 Urutan prosedur', '💡 Solusi cepat', '📞 Diskusi detail']
-        }
-    ];
+    // Sophisticated human-like fallback responses with emotional intelligence
+        const expertFallbacks = [
+            {
+                content: `Wah, pertanyaan yang bagus! 😊 Saya senang Anda bertanya tentang ini.
+
+Dari pengalaman saya, setiap situasi itu unik - seperti sidik jari, tidak ada yang persis sama. Jadi mari kita cari solusi yang paling cocok untuk Anda.
+
+Ceritakan sedikit tentang:
+• Apa yang sedang Anda hadapi sekarang?
+• Sudah berapa lama ini terjadi?
+• Apa yang paling Anda khawatirkan dari situasi ini?
+
+Saya akan bantu step by step, santai saja! 💪`,
+                quickReplies: ['📖 Ceritakan masalah', '⏰ Sudah berapa lama', '😰 Yang dikhawatirkan', '🤝 Bantu step by step']
+            },
+            {
+                content: `Hai! Senang sekali bisa berbagi dengan rekan engineer hebat seperti Anda! ✨
+
+Saya pahami kadang situasi di lapangan bisa bikin pusing kepala. Tapi tenang, kita cari solusi bersama.
+
+Sebelumnya, izinkan saya tanya:
+- Apakah Anda sudah pernah mengalami situasi serupa sebelumnya?
+- Apa yang sudah Anda coba lakukan?
+- Apakah ada kendala resource atau waktu yang membuat Anda tertekan?
+
+Saya akan berikan pendekatan yang realistis sesuai kondisi Anda.`,
+                quickReplies: ['🔄 Pernah mengalami', '✅ Sudah dicoba', '⏳ Kendala resource', '🎯 Pendekatan realistis']
+            },
+            {
+                content: `Halo! 😊 Saya senang sekali bisa menjadi teman diskusi Anda hari ini.
+
+Dalam dunia distribusi listrik, seringkali solusi terbaik datang dari pemahaman mendalam terhadap root cause, bukan hanya gejala.
+
+Mari kita jadi detektif kecil dulu:
+🔍 Apa yang membuat Anda yakin ini adalah masalah utama?
+💡 Jika Anda punya magic wand, apa yang ingin Anda ubah?
+🎯 Apa tujuan akhir yang ingin Anda capai?
+
+Saya akan bantu mapping solusi yang paling efisien untuk Anda!`,
+                quickReplies: ['🔍 Root cause', '✨ Magic wand scenario', '🎯 Goal akhir', '🗺️ Solusi mapping']
+            },
+            {
+                content: `Hey! Welcome to the problem-solving club! 🎪
+
+Saya ingin Anda tahu bahwa setiap engineer hebat pernah stuck di situasi yang mungkin Anda alami sekarang. Itu normal!
+
+Let's make this interactive - saya akan jadi partner thinking Anda:
+• Share your biggest concern first
+• Then tell me your constraints (budget, time, resources)
+• Finally, what's your ideal outcome?
+
+I promise to give you practical, no-BS solutions that actually work in the field. Deal? 🤝`,
+                quickReplies: ['🎯 Biggest concern', '⛓️ Constraints', '🌟 Ideal outcome', '✅ Deal!']
+            },
+            {
+                content: `Perfect timing! I love a good challenge! 🎯
+
+You know what's interesting? The best solutions often come from looking at problems from different angles.
+
+Let's play a quick game - I call it "Engineer's Perspective Shift":
+1. If you were advising your junior colleague, what would you tell them?
+2. If money/time were no object, how would you solve this?
+3. What's the simplest solution you haven't tried yet?
+
+Sometimes we overthink things! Let's find that elegant solution together. Ready? 🚀`,
+                quickReplies: ['👨‍🏫 Junior advice', '💰 No limits', '🎯 Simple solution', '🚀 Ready!']
+            }
+        ];
     
-    // Find best matching fallback based on keywords
-    let bestFallback = expertFallbacks[0];
-    
-    if (lowerMessage.includes('meter')) {
-        bestFallback = expertFallbacks[0];
-    } else if (lowerMessage.includes('loto') || lowerMessage.includes('safety')) {
-        bestFallback = expertFallbacks[3];
-    } else if (lowerMessage.includes('maintenance') || lowerMessage.includes('trafo')) {
-        bestFallback = expertFallbacks[2];
-    } else if (lowerMessage.includes('baru') || lowerMessage.includes('junior')) {
-        bestFallback = expertFallbacks[1];
-    }
+    // Random selection to avoid repetitive responses
+    const randomIndex = Math.floor(Math.random() * expertFallbacks.length);
+    let bestFallback = expertFallbacks[randomIndex];
     
     // Use custom quick replies or default
     const finalQuickReplies = quickReplies.length > 0 ? quickReplies : [
-        '⚡ Keselamatan kerja LOTO',
-        '🔍 Troubleshooting meter kWh',
-        '🛠️ Maintenance trafo distribusi',
-        '📋 SOP PB/PD PESTA',
-        '🚨 Penanganan gangguan darurat'
+        '⚡ Keselamatan kerja',
+        '🔍 Troubleshooting',
+        '🛠️ Maintenance',
+        '📋 Prosedur kerja',
+        '🚨 Penanganan darurat'
     ];
     
     return {
